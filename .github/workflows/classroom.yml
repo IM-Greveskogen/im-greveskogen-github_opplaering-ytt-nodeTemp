@@ -1,29 +1,14 @@
-name: Autograding Tests
-'on':
-- push
-- repository_dispatch
-permissions:
-  checks: write
-  actions: read
-  contents: read
+name: GitHub Classroom Workflow
+
+on: [push]
+
 jobs:
-  run-autograding-tests:
+  build:
+    name: Autograding
     runs-on: ubuntu-latest
-    if: github.actor != 'github-classroom[bot]'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Hello world test
-      id: hello-world-test
-      uses: classroom-resources/autograding-command-grader@v1
-      with:
-        test-name: Hello world test
-        setup-command: npm install
-        command: npm test
-        timeout: 10
-    - name: Autograding Reporter
-      uses: classroom-resources/autograding-grading-reporter@v1
-      env:
-        HELLO-WORLD-TEST_RESULTS: "${{steps.hello-world-test.outputs.result}}"
-      with:
-        runners: hello-world-test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - uses: education/autograding@v1
